@@ -12,8 +12,7 @@ ser = serial.Serial(port='COM3',
                     bytesize=serial.EIGHTBITS,
                     timeout=0.2)
 
-
-# float value to convert
+# data type
 # header1, header2, hour, minute, second, millisecond, roll, pitch, yaw, rollSpeed, pitchSpeed, yawSpeed, Xaccel, Yaccel, Zaccel, 위도, 경도, 고도 , checksum
 
 while True:
