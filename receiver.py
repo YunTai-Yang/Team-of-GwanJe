@@ -30,7 +30,6 @@ class Receiver(threading.Thread):
                     if abs(sum(decode_data[:-1])-decode_data[-1])<1:
                         processed_data = np.around(decode_data[:-1],4)
                         alldata = np.concatenate((time_list, processed_data),axis=0)
-                        print(alldata)
                         self.datahub.update(alldata)
     
 if __name__=="__main__":
