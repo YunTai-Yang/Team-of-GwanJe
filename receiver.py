@@ -28,9 +28,6 @@ class Receiver(threading.Thread):
                     if abs(sum(decodeData[:-1])-decodeData[-1])<1:
                         alldata = np.around(decodeData[:-1],4)
                         self.datahub.update(alldata)
-
-    def start():
-        pass
     
 if __name__=="__main__":
     reciver = Receiver(Datahub())
