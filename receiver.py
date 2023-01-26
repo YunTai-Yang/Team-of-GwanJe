@@ -21,7 +21,9 @@ class Receiver(threading.Thread):
         decodetime = tuple(np.around(np.array(time, dtype=float),1))
         decode_data = struct.unpack('>13f', data_bytes)
         if abs(sum(decode_data[:-1])-decode_data[-1])<1:
-            processed_data = np.around(decode_data[:-1],4)
+            angular_data = np.around(decode_data[:12],2)
+            tude_data = np.around(decode_data[9:12],4)
+            processed_data = np.concatenate((angular_data, tude_data),axis=0)
             alldata = np.concatenate((decodetime, processed_data),axis=0)
             return alldata
         return None
