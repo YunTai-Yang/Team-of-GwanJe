@@ -7,7 +7,7 @@ from datahub import Datahub
 class Receiver(threading.Thread):
     def __init__(self, myport, datahub):
         super().__init__()
-        self.ser = serial.Serial(port=myport,
+        self.ser = serial.Serial(port='COM4',
                     baudrate = 9600,
                     parity=serial.PARITY_NONE,
                     stopbits=serial.STOPBITS_TWO,
@@ -38,7 +38,7 @@ class Receiver(threading.Thread):
                     time_bytes = self.ser.read(16)
                     data_bytes = self.ser.read(52)
                     data = self._decode_data(time_bytes, data_bytes)
-                    print(data)
+                    self.datahub.update(data)
                     if data is not None:
                         pass
     
@@ -47,4 +47,4 @@ class Receiver(threading.Thread):
 
 if __name__=="__main__":
     reciver = Receiver(Datahub())
-    reciver.start()
+    Receiver.run()
