@@ -1,9 +1,7 @@
 import serial
-import time
 import struct
 import random
-import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 
 ser = serial.Serial(port='COM3',
                     baudrate = 9600,
@@ -32,5 +30,3 @@ while True:
 
     packed_bytes = struct.pack('>{}f'.format(len(data_list)), *data_list)
     ser.write(packed_bytes)
-    print(packed_bytes)
-    time.sleep(0.01)
