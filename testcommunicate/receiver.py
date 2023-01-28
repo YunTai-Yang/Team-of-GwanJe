@@ -2,17 +2,17 @@ import struct
 import serial
 import numpy as np
 import threading
-from datahub import Datahub
 
 class Receiver(threading.Thread):
-    def __init__(self, datahub):
+    def __init__(self, myport, datahub):
         super().__init__()
-        self.ser = serial.Serial(port='COM4',
+        self.ser = serial.Serial(port=myport,
                     baudrate = 9600,
                     parity=serial.PARITY_NONE,
                     stopbits=serial.STOPBITS_TWO,
                     bytesize=serial.EIGHTBITS,
                     timeout=2)
+        self.count = 0
         self.datahub = datahub
         self.stop_flag = threading.Event()
 
@@ -26,7 +26,6 @@ class Receiver(threading.Thread):
             processed_data = np.concatenate((angular_data, tude_data),axis=0)
             alldata = np.concatenate((decodetime, processed_data),axis=0)
             return alldata
-        return None
 
     def run(self):
         while not self.stop_flag.is_set():
@@ -37,13 +36,14 @@ class Receiver(threading.Thread):
                     time_bytes = self.ser.read(16)
                     data_bytes = self.ser.read(52)
                     data = self._decode_data(time_bytes, data_bytes)
-                    print(data)
                     if data is not None:
+                        self.datahub.update(data)
+                    else:
                         pass
     
     def stop(self):
         self.stop_flag.set()
 
 if __name__=="__main__":
-    reciver = Receiver(Datahub())
-    reciver.start()
+    receiver = Receiver()
+    receiver.run()

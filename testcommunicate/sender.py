@@ -3,9 +3,9 @@ import time
 import struct
 import random
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 
-ser = serial.Serial(port='COM3',
+ser = serial.Serial(port='COM4',
                     baudrate = 9600,
                     parity=serial.PARITY_NONE,
                     stopbits=serial.STOPBITS_TWO,
@@ -25,12 +25,18 @@ while True:
     for i in range(len(float_list)-3):
         float_list[i] += random.uniform(-1, 1)
     for i in range(len(float_list)-9):
-        float_list[i+9] += random.uniform(-0.001, 0.001)
+        float_list[i+9] += random.uniform(-0.01, 0.01)
     data_list = header_list+time_list+float_list
     checksum = sum(float_list)
     data_list.append(checksum)
 
+    byte_list=[]
+    for f in data_list:
+    int_value = int(f * (10 ** 6))
+    byte = int_value.to_bytes(4, byteorder='big')
+    byte_list.append(byte)
+
     packed_bytes = struct.pack('>{}f'.format(len(data_list)), *data_list)
-    ser.write(packed_bytes)
+    ser.write(packed_bytes) 
     print(packed_bytes)
     time.sleep(0.01)
