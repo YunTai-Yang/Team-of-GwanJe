@@ -1,11 +1,11 @@
-import threading
+from threading import Thread
 
 from datasaver.datasaver import DataSaver
 from receiver.receiver   import Receiver
 from mainWindow.mainWindow import MainWindow
 from datahub import Datahub
 
-class Thread_Receiver(threading.Thread):
+class Thread_Receiver(Thread):
     def __init__(self,datahub):
         super().__init__()
         self.datahub = datahub
@@ -15,7 +15,7 @@ class Thread_Receiver(threading.Thread):
         receiver.start()
 
 
-class Thread_DataSaver(threading.Thread):
+class Thread_DataSaver(Thread):
     def __init__(self, datahub):
         super().__init__()
         self.datahub = datahub
@@ -50,8 +50,6 @@ class Master:
 
         self.mainWindow.start() 
         self.mainWindow.setEventLoop()
-
-
 
 if __name__ == "__main__":
     master = Master()

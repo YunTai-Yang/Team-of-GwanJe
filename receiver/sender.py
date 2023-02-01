@@ -27,6 +27,6 @@ while True:
     data_list = header_list+time_list+float_list
     checksum = sum(float_list)
     data_list.append(checksum)
-
+    print(data_list)
     packed_bytes = struct.pack('>{}f'.format(len(data_list)), *data_list)
     ser.write(packed_bytes)
