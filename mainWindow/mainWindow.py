@@ -8,6 +8,7 @@ from pyqtgraph import PlotWidget, GridItem
 from numpy import empty, zeros
 from .import widgetSize as ws
 
+
 class GraphViewer_Thread(QThread):
     def __init__(self, mainwindow,datahub):
         super().__init__()
