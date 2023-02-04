@@ -5,8 +5,16 @@ from PyQt5.QtGui import QFont
 
 import sys, os
 from pyqtgraph import PlotWidget, GridItem
+<<<<<<< HEAD
 from numpy import empty, zeros
 from .import widgetSize as ws
+=======
+from numpy import empty, zeros, array, dot, cross, reshape, shape, multiply ,sin, cos, deg2rad
+from . import widgetStyle as ws
+from numpy.random import rand
+from numpy.linalg import norm
+import pandas as pd
+>>>>>>> 1835f35612b2eaa164122ea381106d39b031b90c
 
 
 class GraphViewer_Thread(QThread):
@@ -225,7 +233,122 @@ class MapViewer_Thread(QThread):
         self.view.loadFinished.connect(self.on_load_finished)
 
 
+<<<<<<< HEAD
 class MainWindow(QMainWindow):
+=======
+class RocketViewer_Thread(QThread):
+    def __init__(self,mainwindow, datahub):
+        super().__init__()
+        self.mainwindow = mainwindow
+        self.datahub = datahub
+        self.pose = array([1.0, 0.0, 0.0])
+        self.radius = 0.1
+        self.normal = array([0.0, 0.0, 0.0])
+        self.x = rand(1)
+        self.y = rand(1)
+        self.circle_point = zeros((3,37)) 
+        self.view = QWebEngineView(self.mainwindow)
+        self.view.load(QUrl())
+        self.view.setGeometry(*ws.model_geometry)
+        
+
+        self.fig = plt.figure(facecolor='#a0a0a0')
+        self.canvas = FigureCanvas(self.fig)
+        self.canvas.setParent(self.mainwindow)
+        self.canvas.setGeometry(*ws.model_geometry)
+
+        self.speed_label = QLabel("Speed : ",self.mainwindow)
+        self.speed_label.setGeometry(*ws.speed_label_geometry)
+        self.speed_label.setFont(ws.font_speed_text)
+
+
+        self.fig.clear()
+        self.ax = self.fig.add_subplot(111, projection = '3d', facecolor='#a0a0a0')
+        self.ax.set_xlim([-1,1])
+        self.ax.set_ylim([-1,1])
+        self.ax.set_zlim([-1,1])
+        self.ax.axis('off')
+        self.ax.quiver(0, 0, 0, self.pose[0],self.pose[1],self.pose[2],length = 1.5, lw=2, color='black')
+
+    def on_load_finished(self):
+        self.mytimer = QTimer(self)
+        self.mytimer.timeout.connect(self.update_pose)
+        self.mytimer.start(100)
+    
+    def quaternion_from_euler(self, x, y, z):
+        x = deg2rad(x) / 2
+        y = deg2rad(y) / 2
+        z = deg2rad(z) / 2
+
+        cx = cos(x)
+        cy = cos(y)
+        cz = cos(z)
+
+        sx = sin(x)
+        sy = sin(y)
+        sz = sin(z)
+
+        qw = cx * cy * cz + sx * sy * sz
+        qx = sx * cy * cz - cx * sy * sz
+        qy = cx * sy * cz + sx * cy * sz
+        qz = cx * cy * sz - sx * sy * cz
+
+        return array([qw, qx, qy, qz])
+
+    def quaternion_rotate_vector(self, quat, vec):
+        qw, qx, qy, qz = quat
+        x, y, z = vec
+
+        ix = qw * x + qy * z - qz * y
+        iy = qw * y + qz * x - qx * z
+        iz = qw * z + qx * y - qy * x
+        iw = -qx * x - qy * y - qz * z
+
+        x = ix * qw + iw * -qx + iy * -qz - iz * -qy
+        y = iy * qw + iw * -qy + iz * -qx - ix * -qz
+        z = iz * qw + iw * -qz + ix * -qy - iy * -qx
+
+        return array([x, y, z])
+    
+    def circle_points(self,normal):
+        z = (-normal[0]*self.x - normal[1]*self.y)/normal[2]
+        self.circle_point[:,0] = normal
+        u = array([self.x,self.y,z])/norm([self.x,self.y,z])
+        u = reshape(u,3)
+        n = normal/norm(normal)
+        for i in range(2,37):
+            self.circle_point[:,i] = self.radius * cos(deg2rad(10*i))*u + self.radius * sin(deg2rad(10*i))*(cross(u,n))
+        return self.circle_point
+
+    def update_pose(self):
+        if len(self.datahub.speed) == 0:
+            pass
+        else:
+            self.ax.cla()
+            self.ax.set_facecolor('#a0a0a0')
+            self.ax.axis('off')
+            quat = self.quaternion_from_euler(self.datahub.rolls[-1], self.datahub.pitchs[-1],  self.datahub.yaws[-1])
+            result = self.quaternion_rotate_vector(quat, self.pose)
+            circle_vectors = self.circle_points(result)
+            for i in range(37):
+                rocket_vectors = circle_vectors[:,i] + result
+                self.ax.quiver(circle_vectors[0,i],circle_vectors[1,i],circle_vectors[2,i], rocket_vectors[0], rocket_vectors[1], rocket_vectors[2], lw=1, color='black')
+
+            self.ax.set_xlim([-1,1])
+            self.ax.set_ylim([-1,1])
+            self.ax.set_zlim([-1,1])
+            self.ax.set_xlabel("pitch")
+            self.ax.set_ylabel("yaw")
+            self.ax.set_zlabel("roll")  
+            self.speed_label.setText('Speed : {:.2f} m/s'.format(self.datahub.speed[-1]))
+            self.canvas.draw()
+
+    def run(self):
+        self.view.loadFinished.connect(self.on_load_finished)  
+
+class MainWindow(PageWindow):
+
+>>>>>>> 1835f35612b2eaa164122ea381106d39b031b90c
     def __init__(self, datahub):
         self.app = QApplication(sys.argv)
         super().__init__()
@@ -393,6 +516,156 @@ class MainWindow(QMainWindow):
         self.resultwindow.show()
 
 
+<<<<<<< HEAD
+=======
+            self.resultwindow.show()
+
+    # Run when mainwindow is closed
+    def closeEvent(self, event):
+        self.datahub.communication_stop()
+        self.datahub.datasaver_stop()
+        event.accept()
+
+#  Analysis
+class SubWindow(PageWindow):
+    def __init__(self,datahub):
+        super().__init__()
+        
+        self.datahub = datahub
+        self.initUI()
+        self.initGraph()
+        self.initMenubar()
+
+    def initUI(self):
+        self.csv_name_edit = QLineEdit("{}".format(self.datahub.file_Name),self)
+        self.analysis_button = QPushButton("Analysis", self)
+
+        self.csv_name_edit.setGeometry(*ws.csv_name_geometry)
+        self.analysis_button.setGeometry(*ws.analysis_button_geometry)
+
+        self.csv_name_edit.setStyleSheet("background-color: rgb(250,250,250);")
+
+        self.analysis_button.clicked.connect(self.start_analysis)
+
+    def initGraph(self):
+        self.gr_angle = PlotWidget(self)
+        self.gr_angleSpeed = PlotWidget(self)
+        self.gr_accel = PlotWidget(self)
+
+        self.gr_angle.setGeometry(*ws.gr_angle_geometry)
+        self.gr_angleSpeed.setGeometry(*ws.gr_angleSpeed_geometry)
+        self.gr_accel.setGeometry(*ws.gr_accel_geometry)
+
+        self.gr_angle.addItem(GridItem())
+        self.gr_angleSpeed.addItem(GridItem())
+        self.gr_accel.addItem(GridItem())
+
+        self.gr_angle.getPlotItem().getAxis('bottom').setLabel('Time(second)')
+        self.gr_angle.getPlotItem().getAxis('left').setLabel('Degree')
+        self.gr_angleSpeed.getPlotItem().getAxis('bottom').setLabel('Time(second)')
+        self.gr_angleSpeed.getPlotItem().getAxis('left').setLabel('Degree/second')
+        self.gr_accel.getPlotItem().getAxis('bottom').setLabel('Time(second)')
+        self.gr_accel.getPlotItem().getAxis('left').setLabel('g(gravity accel)')
+
+        self.gr_angle.getPlotItem().addLegend()
+        self.gr_angleSpeed.getPlotItem().addLegend()
+        self.gr_accel.getPlotItem().addLegend()
+
+        self.curve_roll = self.gr_angle.plot(pen='r', name = "roll")
+        self.curve_pitch = self.gr_angle.plot(pen='g',name = "pitch")
+        self.curve_yaw = self.gr_angle.plot(pen='b', name = "yaw")
+
+        self.curve_rollSpeed = self.gr_angleSpeed.plot(pen='r', name = "roll speed")
+        self.curve_pitchSpeed = self.gr_angleSpeed.plot(pen='g', name = "pitch speed")
+        self.curve_yawSpeed = self.gr_angleSpeed.plot(pen='b', name = "yaw speed")
+
+        self.curve_xaccel = self.gr_accel.plot(pen='r', name = "x acc")
+        self.curve_yaccel = self.gr_accel.plot(pen='g',name = "y acc")
+        self.curve_zaccel = self.gr_accel.plot(pen='b',name ="z acc")
+
+    def initMenubar(self):
+        self.statusBar()
+
+        change_Action = QAction('Analysis', self)
+        change_Action.setShortcut('Ctrl+L')
+        change_Action.triggered.connect(self.gomain)
+
+        menubar = self.menuBar()
+        menubar.setNativeMenuBar(False)
+        filemenu = menubar.addMenu('Menu')
+        filemenu.addAction(change_Action)
+
+    def start_analysis(self):
+        self.csv_name = self.csv_name_edit.text()
+        try:
+            alldata = pd.read_csv("Your File Name.csv").to_numpy()
+            init_time = alldata[0,0]*3600+alldata[0,1]*60+alldata[0,2]+alldata[0,3]*0.01
+            timespace = alldata[:,0]*3600+alldata[:,1]*60+alldata[:,2]+alldata[:,3]*0.01 - init_time
+            roll = alldata[:,4]
+            pitch = alldata[:,5]
+            yaw = alldata[:,6]
+
+            rollSpeed = alldata[:,7]
+            pitchSpeed = alldata[:,8]
+            yawSpeed = alldata[:,9]
+
+            xaccel = alldata[:,10]
+            yaccel = alldata[:,11]
+            zaccel = alldata[:,12]
+
+            altitude = alldata[:,15]
+            speed = alldata[:,16]
+
+            self.curve_roll.setData(x=timespace,y=roll)
+            self.curve_pitch.setData(x=timespace,y=pitch)
+            self.curve_yaw.setData(x=timespace,y=yaw)
+
+        except:
+            QMessageBox.warning(self,"warning","File open error")
+
+    def gomain(self):
+        self.goto("main")
+
+class window(QMainWindow):
+    def __init__(self,datahub):
+        self.app = QApplication(sys.argv)
+        super().__init__()
+        self.datahub = datahub
+
+        self.initUI()
+        self.initWindows()
+        self.goto("main")
+
+    def initUI(self):
+        self.resize(*ws.full_size)
+        self.setWindowTitle('I-link')
+        self.setStyleSheet(ws.mainwindow_color) 
+
+        path = os.path.abspath(__file__)
+        dir_path = os.path.dirname(path)
+        file_path = os.path.join(dir_path, 'logo.ico')
+        self.setWindowIcon(QIcon(file_path))
+
+    def initWindows(self):
+        self.mainwindow = MainWindow(self.datahub)
+        self.subwindow = SubWindow(self.datahub)
+
+        self.stacked_widget = QStackedWidget()
+        self.setCentralWidget(self.stacked_widget)
+        self.stacked_widget.addWidget(self.mainwindow)
+        self.stacked_widget.addWidget(self.subwindow)
+
+        self.mainwindow.gotoSignal.connect(self.goto)
+        self.subwindow.gotoSignal.connect(self.goto)
+
+    @pyqtSlot(str)
+    def goto(self, name):
+        if name == "main":
+            self.stacked_widget.setCurrentWidget(self.mainwindow)
+
+        if name == "sub":
+            self.stacked_widget.setCurrentWidget(self.subwindow)
+>>>>>>> 1835f35612b2eaa164122ea381106d39b031b90c
 
     # Main Window start method
     def start(self):
