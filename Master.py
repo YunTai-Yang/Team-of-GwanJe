@@ -54,6 +54,4 @@ class Master:
 if __name__ == "__main__":
     master = Master()
 
-    master.run(isDatasaver=1,
-               isReceiver=1
-               )
+    master.run()

@@ -25,7 +25,7 @@ class Receiver(Thread):
                                     timeout=0.1)
 
     def _decode_data(self, data_bytes):
-        decode_data = unpack('>17f', data_bytes)
+        decode_data = unpack('>18f', data_bytes)
 
         if sum(decode_data[4:-1])-decode_data[-1]<1:
             all_data = around(decode_data,4)
@@ -38,7 +38,7 @@ class Receiver(Thread):
             try:
                 if self.datahub.iscommunication_start:
                         if self.first_time:
-                            self.setSerial(self.datahub.mySerialPort, self.datahub.myBaudrate)
+                            self.setSerial(self.datahub.mySerialPort,self.datahub.myBaudrate)
                             self.first_time=False
 
                         self.datahub.serial_port_error=0
@@ -46,12 +46,12 @@ class Receiver(Thread):
 
                         if header1 == b'A':
                             header2 = self.ser.read(1)
-                            
+
                             if header2 == b'B':
-                                bytes_data = self.ser.read(68)
+                                bytes_data = self.ser.read(72)
                                 self._decode_data(bytes_data)
                 else:
-                    sleep(0.1)
+                    sleep(0.08)
             except:
                 self.datahub.serial_port_error=1
 

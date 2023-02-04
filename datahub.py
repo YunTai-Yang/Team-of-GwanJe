@@ -11,7 +11,7 @@ class Datahub:
         self.file_Name = 'FileName.csv'
         self.mySerialPort = 'COM8'
         self.myBaudrate = 115200
-        self.serial_port_error = -1
+        self.serial_port_error=-1
         """
         Rocket Status Parameter
         """
@@ -32,6 +32,7 @@ class Datahub:
         self.latitudes = empty(0)
         self.longitudes = empty(0)
         self.altitude = empty(0)
+        self.speed = empty(0)
         
         #map view trigger
         self.trigger_python = 0
@@ -72,3 +73,4 @@ class Datahub:
         self.latitudes = append(self.latitudes, datas[13])
         self.longitudes = append(self.longitudes, datas[14])
         self.altitude = append(self.altitude, datas[15])
+        self.speed = append(self.speed, datas[16])

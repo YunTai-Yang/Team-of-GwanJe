@@ -115,6 +115,8 @@ guide = """
 
 csv_name_geometry = np.array([a*0.8, 0.8*b,  a*0.08, a*0.02]).astype(int)
 analysis_button_geometry = np.array([a*0.8, 0.85*b,  a*0.08, a*0.02]).astype(int)
+analysis_angular_button_geometry = np.array([a*0.73, 0.7*b, a*0.10, a*0.02]).astype(int)
+analysis_alnsp_button_geometry = np.array([a*0.87, 0.7*b, a*0.10, a*0.02]).astype(int)
 
 gr_angle_geometry = np.array([a*0.1,  b*0.04,  a*0.6,  b*0.28]).astype(int)
 gr_angleSpeed_geometry = np.array([a*0.1,  b*0.36,  a*0.6,  b*0.28]).astype(int)
