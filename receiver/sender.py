@@ -14,7 +14,7 @@ ser = serial.Serial(port='COM3',
 # header1, header2, hour, minute, second, millisecond, roll, pitch, yaw, rollSpeed, pitchSpeed, yawSpeed, Xaccel, Yaccel, Zaccel, 위도, 경도, 고도 , checksum
 
 while True:
-    header_list = [1, 2]
+    header_list = [b'A', b'B']
     now = datetime.now()
     time_string = now.strftime("%H:%M:%S.%f")[:-4]
     strt_list = [now.strftime("%H"), now.strftime("%M"), now.strftime("%S"), now.strftime("%f")[:-4]]
