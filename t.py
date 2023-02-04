@@ -1,9 +1,6 @@
 import pandas as pd
 
 
-df = pd.read_csv("Your File Name.csv")
+df = pd.read_csv("Your File Ndfame.csv").to_numpy()
 
-hours = df.Hours
-
-
-print(hours)
+print(df[:,1])
