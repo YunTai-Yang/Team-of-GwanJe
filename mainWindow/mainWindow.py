@@ -167,6 +167,19 @@ class GraphViewer_Thread(QThread):
             self.curve_yaccel.setData(x=self.time, y=self.yaccel)
             self.curve_zaccel.setData(x=self.time, y=self.zaccel)
 
+    def graph_clear(self):
+        self.curve_roll.clear()
+        self.curve_pitch.clear()
+        self.curve_yaw.clear()
+
+        self.curve_rollSpeed.clear()
+        self.curve_pitchSpeed.clear()
+        self.curve_yawSpeed.clear()
+
+        self.curve_xaccel.clear()
+        self.curve_yaccel.clear()
+        self.curve_zaccel.clear()
+
     def on_load_finished(self):
         # to move the timer to the same thread as the QObject
         self.mytimer = QTimer(self)
@@ -373,12 +386,15 @@ class MainWindow(PageWindow):
         self.mapviewer.start()
         self.graphviewer.start()
         self.rocketviewer.start()
+
+        self.resetcheck = 0
         
     def initUI(self):
 
         """Set Buttons"""
         self.start_button = QPushButton("Press Start",self)
         self.stop_button = QPushButton("Stop",self)
+        self.reset_button = QPushButton("Reset",self)
         self.now_status = QLabel(ws.stop_status,self)
         self.rf_port_edit = QLineEdit("COM8",self)
         self.port_text = QLabel("Port:",self)
@@ -388,17 +404,22 @@ class MainWindow(PageWindow):
 
         self.start_button.setFont(ws.font_start_text)
         self.stop_button.setFont(ws.font_stop_text)
+        self.reset_button.setFont(ws.font_reset_text)
         self.rf_port_edit.setStyleSheet("background-color: rgb(250,250,250);")
         self.baudrate_edit.setStyleSheet("background-color: rgb(250,250,250);")
         self.start_button.setStyleSheet("background-color: rgb(30,30,100); color: rgb(250, 250, 250);font-weight: bold;")
         self.stop_button.setStyleSheet("background-color: rgb(150,30,30); color: rgb(250, 250, 250);font-weight: bold;")
+        self.reset_button.setStyleSheet("background-color: rgb(150,30,30); color: rgb(250, 250, 250);font-weight: bold;")
 
         shadow_start_button = QGraphicsDropShadowEffect()
         shadow_stop_button = QGraphicsDropShadowEffect()
+        shadow_reset_button = QGraphicsDropShadowEffect()
         shadow_start_button.setOffset(6)
         shadow_stop_button.setOffset(6)
+        shadow_reset_button.setOffset(6)
         self.start_button.setGraphicsEffect(shadow_start_button)
         self.stop_button.setGraphicsEffect(shadow_stop_button)
+        self.reset_button.setGraphicsEffect(shadow_reset_button)
         self.baudrate_text.setFont(ws.font_baudrate)
 
         self.port_text.setFont(ws.font_portText)
@@ -406,6 +427,7 @@ class MainWindow(PageWindow):
 
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
+        self.reset_button.setEnabled(False)
         self.rf_port_edit.setEnabled(True)
         
         self.baudrate_edit.setEnabled(True)
@@ -413,10 +435,12 @@ class MainWindow(PageWindow):
         """Set Buttons Connection"""
         self.start_button.clicked.connect(self.start_button_clicked)
         self.stop_button.clicked.connect(self.stop_button_clicked)
+        self.reset_button.clicked.connect(self.reset_button_clicked)
 
         """Set Geometry"""
         self.start_button.setGeometry(*ws.start_geometry)
         self.stop_button.setGeometry(*ws.stop_geometry)
+        self.reset_button.setGeometry(*ws.reset_geometry)
         self.port_text.setGeometry(*ws.port_text_geometry)
         self.rf_port_edit.setGeometry(*ws.port_edit_geometry)
         self.baudrate_text.setGeometry(*ws.baudrate_text_geometry)
@@ -498,38 +522,63 @@ class MainWindow(PageWindow):
 
     # Run when start button is clicked
     def start_button_clicked(self):
-        QMessageBox.information(self,"information","Program Start")
-        FileName,ok = QInputDialog.getText(self,'Input Dialog', 'Enter your File Name',QLineEdit.Normal,"Your File Name")
-        if ok:
-            self.datahub.mySerialPort=self.rf_port_edit.text()
-            self.datahub.myBaudrate = self.baudrate_edit.text()
-            self.datahub.file_Name = FileName+'.csv'
+        if self.resetcheck == 0:
+            QMessageBox.information(self,"information","Program Start")
+            FileName,ok = QInputDialog.getText(self,'Input Dialog', 'Enter your File Name',QLineEdit.Normal,"Your File Name")
+            if ok:
+                self.datahub.mySerialPort=self.rf_port_edit.text()
+                self.datahub.myBaudrate = self.baudrate_edit.text()
+                self.datahub.file_Name = FileName+'.csv'
+                self.datahub.communication_start()
+                
+                self.datahub.serial_port_error=-1
+                if self.datahub.check_communication_error():
+                    QMessageBox.warning(self,"warning","Check the Port or Baudrate again.")
+                    self.datahub.communication_stop()
+                else:
+                    self.datahub.datasaver_start()
+                    self.now_status.setText(ws.start_status)
+                    self.start_button.setEnabled(False)
+                    self.stop_button.setEnabled(True)
+                    self.rf_port_edit.setEnabled(False)
+                    self.baudrate_edit.setEnabled(False)
+            self.datahub.serial_port_error=-1
+        else:
+            QMessageBox.information(self,"information","Program Restart")
             self.datahub.communication_start()
             
             self.datahub.serial_port_error=-1
-            if self.datahub.check_communication_error():
-                QMessageBox.warning(self,"warning","Check the Port or Baudrate again.")
-                self.datahub.communication_stop()
-
-            else:
-                self.datahub.datasaver_start()
-                self.now_status.setText(ws.start_status)
-                self.start_button.setEnabled(False)
-                self.stop_button.setEnabled(True)
-                self.rf_port_edit.setEnabled(False)
-                self.baudrate_edit.setEnabled(False)
-        self.datahub.serial_port_error=-1
+            self.now_status.setText(ws.start_status)
+            self.start_button.setEnabled(False)
+            self.stop_button.setEnabled(True)
+            self.rf_port_edit.setEnabled(False)
+            self.baudrate_edit.setEnabled(False)
+            self.resetcheck = 0
     
     # Run when stop button is clicked
     def stop_button_clicked(self):
         QMessageBox.information(self,"information","Program Stop")
         self.datahub.communication_stop()
-        self.datahub.datasaver_stop()
         self.now_status.setText(ws.stop_status)
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
-        self.rf_port_edit.setEnabled(False)     
-        self.result_window()
+        self.reset_button.setEnabled(True)
+        self.rf_port_edit.setEnabled(False)
+        self.resetcheck = 1
+    
+    # Run when reset button is clicked
+    def reset_button_clicked(self):
+        QMessageBox.information(self,"information","Program Reset")
+        self.datahub.communication_stop()
+        self.datahub.datasaver_stop()
+        self.datahub.__init__()
+        self.now_status.setText(ws.stop_status)
+        self.start_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        self.reset_button.setEnabled(False)
+        self.rf_port_edit.setEnabled(False)
+        self.graphviewer.graph_clear()
+        self.resetcheck = 0
 
     #curve hide check box is clicked
     def roll_hide_checkbox_state(self,state):

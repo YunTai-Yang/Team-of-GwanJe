@@ -50,7 +50,8 @@ baudrate_edit_geometry = np.array([a*0.46,  a*0.28+b*0.132,  a*0.06, a*0.01125])
 
 # start/stop button geometry
 start_geometry = np.array([a*0.41,  0.132*b+0.3*a,  0.12*a,  0.12*a ]).astype(int)
-stop_geometry = np.array([a*0.56, a*0.27+b*0.132, 0.15*a, 0.15*a]).astype(int)
+stop_geometry = np.array([a*0.56, a*0.265+b*0.132, 0.15*a, 0.07*a]).astype(int)
+reset_geometry = np.array([a*0.56, a*0.35+b*0.132, 0.15*a, 0.07*a]).astype(int)
 status_geometry = np.array([a*0.41,  0.14*b+0.42*a, 0.3*a, 35]).astype(int)
 
 # 
@@ -91,6 +92,9 @@ font_start_text.setPointSize(20)
 
 font_stop_text = QFont()
 font_stop_text.setPointSize(20)
+
+font_reset_text = QFont()
+font_reset_text.setPointSize(20)
 
 font_status_text = QFont()
 font_status_text.setPointSize(11)
