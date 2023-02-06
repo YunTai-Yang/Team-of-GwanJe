@@ -212,6 +212,19 @@ class MapViewer_Thread(QThread):
         path = abspath(__file__)
         dir_path = dirname(path)
         file_path = join(dir_path, 'map.html')
+
+        with open(file_path, "r") as file:
+            map_html = file.read()
+        
+        new_width = f"{ws.map_geometry[2]}px"
+        new_height = f"{ws.map_geometry[3]}px"
+        map_html = map_html.replace("width: 550px;", f"width: {new_width};")
+        map_html = map_html.replace("height: 550px;", f"height: {new_height};")
+
+        with open(file_path,"w") as file:
+            file.write(map_html)
+            file.close()
+
         self.view.load(QUrl.fromLocalFile(file_path))
         self.view.show()
 
@@ -244,7 +257,6 @@ class MapViewer_Thread(QThread):
             }}
         }}
         """
-        #{print(self.datahub.latitudes)}
         page.runJavaScript(self.script)
         # Create a QTimer to call the updateMarker function every second
         self.timer = QTimer(self)
@@ -359,13 +371,15 @@ class RocketViewer_Thread(QThread):
             result = self.quaternion_rotate_vector(quat, self.pose)
             circle_vectors = self.circle_points(result)
             
-            for i in range(5):
-                rocket_vectors = circle_vectors[:,i] + result
-                self.ax.quiver(circle_vectors[0,i],circle_vectors[1,i],circle_vectors[2,i], rocket_vectors[0], rocket_vectors[1], rocket_vectors[2], lw=0.5, color='black')
+            self.ax.quiver(0,0,0,2*circle_vectors[0,0],2*circle_vectors[1,0],2*circle_vectors[2,0],lw=1.5, color='red' )
 
-            self.ax.set_xlim([-1,1])
-            self.ax.set_ylim([-1,1])
-            self.ax.set_zlim([-1,1])
+            for i in range(1,5):
+                rocket_vectors = circle_vectors[:,i] + result
+                self.ax.quiver(circle_vectors[0,i],circle_vectors[1,i],circle_vectors[2,i], 0.9*rocket_vectors[0], 0.9*rocket_vectors[1], 0.9*rocket_vectors[2], lw=0.5, color='black')
+
+            self.ax.set_xlim([-1.3,1.3])
+            self.ax.set_ylim([-1.3,1.3])
+            self.ax.set_zlim([-1.3,1.3])
             self.ax.set_xlabel("pitch")
             self.ax.set_ylabel("yaw")
             self.ax.set_zlabel("roll")  
@@ -555,6 +569,7 @@ class MainWindow(PageWindow):
                         self.stop_button.setEnabled(True)
                         self.rf_port_edit.setEnabled(False)
                         self.baudrate_edit.setEnabled(False)
+                        self.reset_button.setEnabled(True)
                         self.shadow_start_button.setOffset(0)
                         self.shadow_stop_button.setOffset(6)
                         self.shadow_reset_button.setOffset(6)
@@ -567,6 +582,7 @@ class MainWindow(PageWindow):
             self.stop_button.setEnabled(True)
             self.rf_port_edit.setEnabled(False)
             self.baudrate_edit.setEnabled(False)
+            self.reset_button.setEnabled(True)
             self.shadow_start_button.setOffset(0)
             self.shadow_stop_button.setOffset(6)
             self.shadow_reset_button.setOffset(6)
@@ -624,7 +640,6 @@ class MainWindow(PageWindow):
         self.graphviewer.curve_yaccel.setVisible(state != Qt.Checked)
     def zacc_hide_checkbox_state(self,state):
         self.graphviewer.curve_zaccel.setVisible(state != Qt.Checked)
-
 
 class TimeAxisItem(AxisItem):
     def __init__(self, *args, **kwargs):

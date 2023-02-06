@@ -20,9 +20,9 @@ pw_angle_geometry = np.array([a*0.07,  b*0.05,  a*0.3,  b*0.28]).astype(int)
 pw_angleSpeed_geometry = np.array([a*0.07,  b*0.37,  a*0.3,  b*0.28]).astype(int)
 pw_accel_geometry = np.array([a*0.07,  b*0.69,  a*0.3,  b*0.28]).astype(int)
 
-angle_title_geometry = np.array([a*0.15, b*0.025, 200, 30]).astype(int)
-angleSpeed_title_geometry = np.array([a*0.15, b*0.345, 200, 30]).astype(int)
-accel_title_geometry = np.array([a*0.15, b*0.665, 200, 30]).astype(int)
+angle_title_geometry = np.array([a*0.15, b*0.025, a*0.2, 30]).astype(int)
+angleSpeed_title_geometry = np.array([a*0.15, b*0.345, a*0.2, 30]).astype(int)
+accel_title_geometry = np.array([a*0.15, b*0.665, a*0.2, 30]).astype(int)
 
 # checker geometry
 roll_checker_geomoetry = np.array([a*0.02,  b*0.07,  100,  50]).astype(int)
@@ -49,20 +49,21 @@ baudrate_text_geometry = np.array([a*0.41,  a*0.28+b*0.132, a*0.04, a*0.01125]).
 baudrate_edit_geometry = np.array([a*0.46,  a*0.28+b*0.132,  a*0.06, a*0.01125]).astype(int)
 
 # start/stop button geometry
-start_geometry = np.array([a*0.41,  0.132*b+0.3*a,  0.12*a,  0.12*a ]).astype(int)
-stop_geometry = np.array([a*0.56, a*0.265+b*0.132, 0.15*a, 0.07*a]).astype(int)
-reset_geometry = np.array([a*0.56, a*0.35+b*0.132, 0.15*a, 0.07*a]).astype(int)
-status_geometry = np.array([a*0.41,  0.14*b+0.42*a, 0.3*a, 35]).astype(int)
+start_geometry = np.array([a*0.41,  0.132*b+0.3*a,  0.12*a,  0.768*b-0.3*a ]).astype(int)
+stop_geometry = np.array([a*0.56, a*0.265+b*0.132, 0.15*a, 0.384*b-0.135*a]).astype(int)
+reset_geometry = np.array([a*0.56, a*0.135+b*0.516, 0.15*a, 0.384*b-0.135*a]).astype(int)
+status_geometry = np.array([a*0.41,  0.91*b, 0.3*a, 0.05*b]).astype(int)
 
+0.97*b
 # 
-model_geometry = np.array([a*0.75,  b*0.04,  a*0.2, a*0.3]).astype(int)
+model_geometry = np.array([a*0.74,  b*0.04,  a*0.24, a*0.3]).astype(int)
 speed_label_geometry = np.array([a*0.8, 0.04*b+0.26*a, 250,30]).astype(int)
 
 # 
-cmd_geometry = np.array([a*0.74, 0.24*a+0.132*b,  a*0.22,  0.17*a]).astype(int)
+cmd_geometry = np.array([a*0.74, 0.24*a+0.132*b,  a*0.25,  0.17*a]).astype(int)
 
 # 
-irri_logo_geometry = np.array([a*0.83, 0.89*b,  a*0.15,  0.1*b]).astype(int)
+irri_logo_geometry = np.array([a*0.83, 0.89*b,  a*0.16,  0.1*b]).astype(int)
 
 # all fonts
 font_portText = QFont()
