@@ -797,39 +797,39 @@ class SubWindow(PageWindow):
             init_time = alldata[0,0]*3600+alldata[0,1]*60+alldata[0,2]+alldata[0,3]*0.01
             self.timespace = alldata[:,0]*3600000+alldata[:,1]*60000+alldata[:,2]*1000+alldata[:,3]*10
 
-            roll = alldata[:,4]
-            pitch = alldata[:,5]
-            yaw = alldata[:,6]
+            self.roll = alldata[:,4]
+            self.pitch = alldata[:,5]
+            self.yaw = alldata[:,6]
 
-            rollSpeed = alldata[:,7]
-            pitchSpeed = alldata[:,8]
-            yawSpeed = alldata[:,9]
+            self.rollSpeed = alldata[:,7]
+            self.pitchSpeed = alldata[:,8]
+            self.yawSpeed = alldata[:,9]
 
-            xaccel = alldata[:,10]
-            yaccel = alldata[:,11]
-            zaccel = alldata[:,12]
-            altitude = alldata[:,15]
-            speed = alldata[:,16]
+            self.xaccel = alldata[:,10]
+            self.yaccel = alldata[:,11]
+            self.zaccel = alldata[:,12]
+            self.altitude = alldata[:,15]
+            self.speed = alldata[:,16]
+            print(type(self.speed))
+            self.curve_roll.setData(x=self.timespace,y=self.roll)
+            self.curve_pitch.setData(x=self.timespace,y=self.pitch)
+            self.curve_yaw.setData(x=self.timespace,y=self.yaw)
 
-            self.curve_roll.setData(x=self.timespace,y=roll)
-            self.curve_pitch.setData(x=self.timespace,y=pitch)
-            self.curve_yaw.setData(x=self.timespace,y=yaw)
+            self.curve_rollSpeed.setData(x=self.timespace,y=self.rollSpeed)
+            self.curve_pitchSpeed.setData(x=self.timespace,y=self.pitchSpeed)
+            self.curve_yawSpeed.setData(x=self.timespace,y=self.yawSpeed)
 
-            self.curve_rollSpeed.setData(x=self.timespace,y=rollSpeed)
-            self.curve_pitchSpeed.setData(x=self.timespace,y=pitchSpeed)
-            self.curve_yawSpeed.setData(x=self.timespace,y=yawSpeed)
+            self.curve_xaccel.setData(x=self.timespace,y=self.xaccel)
+            self.curve_yaccel.setData(x=self.timespace,y=self.yaccel)
+            self.curve_zaccel.setData(x=self.timespace,y=self.zaccel)
 
-            self.curve_xaccel.setData(x=self.timespace,y=xaccel)
-            self.curve_yaccel.setData(x=self.timespace,y=yaccel)
-            self.curve_zaccel.setData(x=self.timespace,y=zaccel)
+            self.curve_altitude.setData(x=self.timespace,y=self.altitude)
 
-            self.curve_altitude.setData(x=self.timespace,y=altitude)
+            self.curve_speed.setData(x=self.timespace,y=self.speed)
 
-            self.curve_speed.setData(x=self.timespace,y=speed)
-
-            total_accel = (xaccel**2+yaccel**2+zaccel**2)**(0.5)
-            self.max_altitude.setText("{:.2f} m".format(max(altitude)))
-            self.max_speed.setText("{:.2f} m/s".format(max(speed)))
+            total_accel = (self.xaccel**2+self.yaccel**2+self.zaccel**2)**(0.5)
+            self.max_altitude.setText("{:.2f} m".format(max(self.altitude)))
+            self.max_speed.setText("{:.2f} m/s".format(max(self.speed)))
             self.max_accel.setText("{:.2f} g".format(max(total_accel)))
 
             self.start_angularGraph()
@@ -847,6 +847,12 @@ class SubWindow(PageWindow):
             self.gr_accel.setXRange(min(self.timespace),max(self.timespace))
             self.gr_speed.setXRange(min(self.timespace),max(self.timespace))
             self.gr_altitude.setXRange(min(self.timespace),max(self.timespace))
+
+            self.gr_angle.setYRange(min(min(self.roll),min(self.pitch),min(self.yaw)),max(max(self.roll),max(self.pitch),max(self.yaw)))
+            self.gr_angleSpeed.setYRange(min(min(self.rollSpeed),min(self.pitchSpeed),min(self.yawSpeed)),max(max(self.rollSpeed),max(self.pitchSpeed),max(self.yawSpeed)))
+            self.gr_accel.setYRange(min(min(self.xaccel),min(self.yaccel),min(self.zaccel)),max(max(self.xaccel),max(self.yaccel),max(self.zaccel)))
+            self.gr_speed.setYRange(min(self.speed),max(self.speed))
+            self.gr_altitude.setYRange(min(self.altitude),max(self.altitude))
 
 class window(QMainWindow):
     def __init__(self,datahub):
