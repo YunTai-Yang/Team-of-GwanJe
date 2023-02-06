@@ -108,13 +108,13 @@ stop_status = 'Program stop.'
 wait_status = 'Wait for start'
 
 guide = """
-1. Enter your serial port in the text box\n
-2. Pust start button\n
-3. Enter your save file name for save datas and \n     push ok button\n
-3. You can push a check box left the graph to \n     hide a curve\n
-4. You can drag a map or scroll the map to move view\n
-5. All reveiced data is saved in real-time and saved in same folder\n
-6. Push stop button
+1. 시리얼 포트 입력\n
+2. 시작 버튼 클릭\n
+3. 데이터 저장할 파일 이름 입력 \n
+4. 체크박스 클릭 --> 그래프 숨기기 / 보이기 \n
+4. 정지 버튼 클릭 --> 통신 종료(재시작 하면 같은 파일에 저장)\n
+5. 리셋 버틍 클릭 --> 통신 종료 및 파일 저장 종료\n
+6. 메뉴바(ctrl+l) -> 분석 툴 -> 파일 이름 확인 후 분석
 """
 
 ### Sub window ###
@@ -133,9 +133,9 @@ max_altitude_label_geometry = np.array([a*0.75,  b*0.15,  300, 50]).astype(int)
 max_speed_label_geometry = np.array([a*0.75,  b*0.15+50,  300, 50]).astype(int)
 max_accel_label_geometry = np.array([a*0.75,  b*0.15+100,  300, 50]).astype(int)
 
-max_altitude_geometry = np.array([a*0.75+200,  b*0.15,  300, 50]).astype(int)
-max_speed_geometry = np.array([a*0.75+200,  b*0.15+50,  300, 50]).astype(int)
-max_accel_geometry = np.array([a*0.75+200,  b*0.15+100,  300, 50]).astype(int)
+max_altitude_geometry = np.array([a*0.75+300,  b*0.15,  300, 50]).astype(int)
+max_speed_geometry = np.array([a*0.75+300,  b*0.15+50,  300, 50]).astype(int)
+max_accel_geometry = np.array([a*0.75+300,  b*0.15+100,  300, 50]).astype(int)
 
 
 
