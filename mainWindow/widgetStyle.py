@@ -13,16 +13,16 @@ full_size = np.array([a,b]).astype(int)
 
 mainwindow_color = "background-color: rgb(160, 160, 160);"
 
-webEngine_geometry = np.array([a*0.07,  b*0.04,  b*0.04, b*0.04]).astype(int)
+webEngine_geometry = np.array([a*0.07,  b*0.05,  b*0.04, b*0.04]).astype(int)
 
 # graph geometry
-pw_angle_geometry = np.array([a*0.07,  b*0.04,  a*0.3,  b*0.28]).astype(int)
-pw_angleSpeed_geometry = np.array([a*0.07,  b*0.36,  a*0.3,  b*0.28]).astype(int)
-pw_accel_geometry = np.array([a*0.07,  b*0.68,  a*0.3,  b*0.28]).astype(int)
+pw_angle_geometry = np.array([a*0.07,  b*0.05,  a*0.3,  b*0.28]).astype(int)
+pw_angleSpeed_geometry = np.array([a*0.07,  b*0.37,  a*0.3,  b*0.28]).astype(int)
+pw_accel_geometry = np.array([a*0.07,  b*0.69,  a*0.3,  b*0.28]).astype(int)
 
-angle_title_geometry = np.array([a*0.15, b*0.015, 200, 30]).astype(int)
-angleSpeed_title_geometry = np.array([a*0.15, b*0.335, 200, 30]).astype(int)
-accel_title_geometry = np.array([a*0.15, b*0.655, 200, 30]).astype(int)
+angle_title_geometry = np.array([a*0.15, b*0.025, 200, 30]).astype(int)
+angleSpeed_title_geometry = np.array([a*0.15, b*0.345, 200, 30]).astype(int)
+accel_title_geometry = np.array([a*0.15, b*0.665, 200, 30]).astype(int)
 
 # checker geometry
 roll_checker_geomoetry = np.array([a*0.02,  b*0.07,  100,  50]).astype(int)
@@ -102,6 +102,8 @@ font_status_text.setPointSize(11)
 font_speed_text = QFont()
 font_speed_text.setPointSize(16)
 
+
+
 start_status = 'Program start. you can push the stop button'
 stop_status = 'Program stop. you can push the start button'
 
@@ -117,11 +119,37 @@ guide = """
 
 ### Sub window ###
 
-csv_name_geometry = np.array([a*0.8, 0.8*b,  a*0.08, a*0.02]).astype(int)
-analysis_button_geometry = np.array([a*0.8, 0.85*b,  a*0.08, a*0.02]).astype(int)
+csv_name_geometry = np.array([a*0.8, 0.8*b,  a*0.1, a*0.02]).astype(int)
+analysis_button_geometry = np.array([a*0.8, 0.85*b,  a*0.1, a*0.02]).astype(int)
 analysis_angular_button_geometry = np.array([a*0.73, 0.7*b, a*0.10, a*0.02]).astype(int)
 analysis_alnsp_button_geometry = np.array([a*0.87, 0.7*b, a*0.10, a*0.02]).astype(int)
 
 gr_angle_geometry = np.array([a*0.1,  b*0.04,  a*0.6,  b*0.28]).astype(int)
 gr_angleSpeed_geometry = np.array([a*0.1,  b*0.36,  a*0.6,  b*0.28]).astype(int)
 gr_accel_geometry = np.array([a*0.1,  b*0.68,  a*0.6,  b*0.28]).astype(int)
+
+max_altitude_label_geometry = np.array([a*0.75,  b*0.15,  300, 50]).astype(int)
+max_speed_label_geometry = np.array([a*0.75,  b*0.15+50,  300, 50]).astype(int)
+max_accel_label_geometry = np.array([a*0.75,  b*0.15+100,  300, 50]).astype(int)
+
+max_altitude_geometry = np.array([a*0.75+200,  b*0.15,  300, 50]).astype(int)
+max_speed_geometry = np.array([a*0.75+200,  b*0.15+50,  300, 50]).astype(int)
+max_accel_geometry = np.array([a*0.75+200,  b*0.15+100,  300, 50]).astype(int)
+
+font_max_alti_label_text = QFont()
+font_max_alti_label_text.setPointSize(15)
+
+font_max_speed_label_text = QFont()
+font_max_speed_label_text.setPointSize(15)
+
+font_max_accel_label_text = QFont()
+font_max_accel_label_text.setPointSize(15)
+
+font_max_alti_text = QFont()
+font_max_alti_text.setPointSize(15)
+
+font_max_speed_text = QFont()
+font_max_speed_text.setPointSize(15)
+
+font_max_accel_text = QFont()
+font_max_accel_text.setPointSize(15)

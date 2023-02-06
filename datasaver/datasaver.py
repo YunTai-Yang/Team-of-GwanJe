@@ -38,7 +38,8 @@ class DataSaver:
                     self.writer.writerow(data[:,i],)
                 self.file.flush()
                 self.saverows += lineRemain
-
+                sleep(0.1)
+            else:
                 sleep(0.1)
                 
     def start(self):
@@ -47,7 +48,6 @@ class DataSaver:
                 if self.file is None or self.file.closed:
                     self.counter = 0
                     self.file = open(self.datahub.file_Name, 'w', newline='')
-
                     self.writer = writer(self.file)
                     self.writer.writerow(["Hours","Minute","Second","10milis","Roll","Pitch","Yaw","RollSpeed","PitchSpeed","YawSpeed","Xaccel","Yaccel","Zaccel","longitude","latitude","altitude","Speed"])
                     self.save_data()
@@ -60,3 +60,4 @@ class DataSaver:
     def stop(self):
         if self.file != None and not self.file.closed:
             self.file.close()
+        self.saverows = 0

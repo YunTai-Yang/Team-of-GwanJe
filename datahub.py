@@ -8,7 +8,7 @@ class Datahub:
         """
         self.iscommunication_start = 0
         self.isdatasaver_start = 0
-        self.file_Name = 'FileName.csv'
+        self.file_Name = 'Your File Name.csv'
         self.mySerialPort = 'COM8'
         self.myBaudrate = 115200
         self.serial_port_error=-1
@@ -33,6 +33,7 @@ class Datahub:
         self.longitudes = empty(0)
         self.altitude = empty(0)
         self.speed = empty(0)
+        self.n=0
         
         #map view trigger
         self.trigger_python = 0
@@ -74,3 +75,24 @@ class Datahub:
         self.longitudes = append(self.longitudes, datas[14])
         self.altitude = append(self.altitude, datas[15])
         self.speed = append(self.speed, datas[16])
+
+
+
+    def clear(self):
+        self.hours = empty(0)
+        self.mins = empty(0)
+        self.secs = empty(0)
+        self.tenmilis = empty(0)
+        self.rolls = empty(0)
+        self.pitchs = empty(0)
+        self.yaws = empty(0)
+        self.rollSpeeds = empty(0)
+        self.pitchSpeeds = empty(0)
+        self.yawSpeeds = empty(0)
+        self.Xaccels = empty(0)
+        self.Yaccels = empty(0)
+        self.Zaccels = empty(0)
+        self.latitudes = empty(0)
+        self.longitudes = empty(0)
+        self.altitude = empty(0)
+        self.speed = empty(0)

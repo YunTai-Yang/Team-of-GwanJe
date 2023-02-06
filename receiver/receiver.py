@@ -41,6 +41,9 @@ class Receiver(Thread):
                             self.setSerial(self.datahub.mySerialPort,self.datahub.myBaudrate)
                             self.first_time=False
 
+                        if not self.ser.is_open:
+                            self.ser.open()
+
                         self.datahub.serial_port_error=0
                         header1 = self.ser.read(1)
 
@@ -50,7 +53,10 @@ class Receiver(Thread):
                             if header2 == b'B':
                                 bytes_data = self.ser.read(72)
                                 self._decode_data(bytes_data)
+
                 else:
+                    if self.ser != None and self.ser.is_open :
+                        self.ser.close()
                     sleep(0.08)
             except:
                 self.datahub.serial_port_error=1

@@ -7,7 +7,7 @@ from datetime import datetime
 
 class ImuRead:
     def __init__(self):
-        self.ser_imu = serial.Serial(port='COM7',
+        self.ser_imu = serial.Serial(port='COM8',
                          baudrate=921600)
 
 
@@ -110,7 +110,7 @@ class ImuRead:
         
         self.ser_rf.write(packed_bytes)
         self.n+=1
-        # print(speed)
+        print(self.status)
         # time.sleep(0.01)
 
 
