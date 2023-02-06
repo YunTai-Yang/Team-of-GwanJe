@@ -792,50 +792,50 @@ class SubWindow(PageWindow):
 
     def start_analysis(self):
         self.csv_name = self.csv_name_edit.text()
-        # try:
-        alldata = read_csv(self.csv_name).to_numpy()
-        init_time = alldata[0,0]*3600+alldata[0,1]*60+alldata[0,2]+alldata[0,3]*0.01
-        self.timespace = alldata[:,0]*3600000+alldata[:,1]*60000+alldata[:,2]*1000+alldata[:,3]*10
+        try:
+            alldata = read_csv(self.csv_name).to_numpy()
+            init_time = alldata[0,0]*3600+alldata[0,1]*60+alldata[0,2]+alldata[0,3]*0.01
+            self.timespace = alldata[:,0]*3600000+alldata[:,1]*60000+alldata[:,2]*1000+alldata[:,3]*10
 
-        roll = alldata[:,4]
-        pitch = alldata[:,5]
-        yaw = alldata[:,6]
+            roll = alldata[:,4]
+            pitch = alldata[:,5]
+            yaw = alldata[:,6]
 
-        rollSpeed = alldata[:,7]
-        pitchSpeed = alldata[:,8]
-        yawSpeed = alldata[:,9]
+            rollSpeed = alldata[:,7]
+            pitchSpeed = alldata[:,8]
+            yawSpeed = alldata[:,9]
 
-        xaccel = alldata[:,10]
-        yaccel = alldata[:,11]
-        zaccel = alldata[:,12]
-        altitude = alldata[:,15]
-        speed = alldata[:,16]
+            xaccel = alldata[:,10]
+            yaccel = alldata[:,11]
+            zaccel = alldata[:,12]
+            altitude = alldata[:,15]
+            speed = alldata[:,16]
 
-        self.curve_roll.setData(x=self.timespace,y=roll)
-        self.curve_pitch.setData(x=self.timespace,y=pitch)
-        self.curve_yaw.setData(x=self.timespace,y=yaw)
+            self.curve_roll.setData(x=self.timespace,y=roll)
+            self.curve_pitch.setData(x=self.timespace,y=pitch)
+            self.curve_yaw.setData(x=self.timespace,y=yaw)
 
-        self.curve_rollSpeed.setData(x=self.timespace,y=rollSpeed)
-        self.curve_pitchSpeed.setData(x=self.timespace,y=pitchSpeed)
-        self.curve_yawSpeed.setData(x=self.timespace,y=yawSpeed)
+            self.curve_rollSpeed.setData(x=self.timespace,y=rollSpeed)
+            self.curve_pitchSpeed.setData(x=self.timespace,y=pitchSpeed)
+            self.curve_yawSpeed.setData(x=self.timespace,y=yawSpeed)
 
-        self.curve_xaccel.setData(x=self.timespace,y=xaccel)
-        self.curve_yaccel.setData(x=self.timespace,y=yaccel)
-        self.curve_zaccel.setData(x=self.timespace,y=zaccel)
+            self.curve_xaccel.setData(x=self.timespace,y=xaccel)
+            self.curve_yaccel.setData(x=self.timespace,y=yaccel)
+            self.curve_zaccel.setData(x=self.timespace,y=zaccel)
 
-        self.curve_altitude.setData(x=self.timespace,y=altitude)
+            self.curve_altitude.setData(x=self.timespace,y=altitude)
 
-        self.curve_speed.setData(x=self.timespace,y=speed)
+            self.curve_speed.setData(x=self.timespace,y=speed)
 
-        total_accel = (xaccel**2+yaccel**2+zaccel**2)**(0.5)
-        self.max_altitude.setText("{:.2f} m".format(max(altitude)))
-        self.max_speed.setText("{:.2f} m/s".format(max(speed)))
-        self.max_accel.setText("{:.2f} g".format(max(total_accel)))
+            total_accel = (xaccel**2+yaccel**2+zaccel**2)**(0.5)
+            self.max_altitude.setText("{:.2f} m".format(max(altitude)))
+            self.max_speed.setText("{:.2f} m/s".format(max(speed)))
+            self.max_accel.setText("{:.2f} g".format(max(total_accel)))
 
-        self.start_angularGraph()
+            self.start_angularGraph()
 
-        # except:
-        #     QMessageBox.warning(self,"warning","File open error")
+        except:
+            QMessageBox.warning(self,"warning","File open error")
 
     def gomain(self):
         self.goto("main")
