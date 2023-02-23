@@ -32,6 +32,10 @@ class GraphViewer_Thread(QThread):
         self.mainwindow = mainwindow
         self.datahub = datahub
 
+        self.range_button = QPushButton("Auto \n Range",self.mainwindow)
+        self.range_button.setGeometry(*ws.range_button_geometry)
+        self.range_button.clicked.connect(self.reset_range)
+
         self.view = QWebEngineView(self.mainwindow)
         self.view.load(QUrl())
         self.view.setGeometry(*ws.webEngine_geometry)
@@ -83,17 +87,17 @@ class GraphViewer_Thread(QThread):
         self.pw_accel.getPlotItem().addLegend()
         
 
-        self.curve_roll = self.pw_angle.plot(pen='r', name = "roll")
-        self.curve_pitch = self.pw_angle.plot(pen='g',name = "pitch")
-        self.curve_yaw = self.pw_angle.plot(pen='b', name = "yaw")
+        self.curve_roll = self.pw_angle.plot(pen={'color':'r', 'width':2}, name = "roll")
+        self.curve_pitch = self.pw_angle.plot(pen={'color':'g', 'width':2},name = "pitch")
+        self.curve_yaw = self.pw_angle.plot(pen={'color':'skyblue', 'width':2}, name = "yaw")
 
-        self.curve_rollSpeed = self.pw_angleSpeed.plot(pen='r', name = "roll speed")
-        self.curve_pitchSpeed = self.pw_angleSpeed.plot(pen='g', name = "pitch speed")
-        self.curve_yawSpeed = self.pw_angleSpeed.plot(pen='b', name = "yaw speed")
+        self.curve_rollSpeed = self.pw_angleSpeed.plot(pen={'color':'r', 'width':2}, name = "roll speed")
+        self.curve_pitchSpeed = self.pw_angleSpeed.plot(pen={'color':'g', 'width':2}, name = "pitch speed")
+        self.curve_yawSpeed = self.pw_angleSpeed.plot(pen={'color':'skyblue', 'width':2}, name = "yaw speed")
 
-        self.curve_xaccel = self.pw_accel.plot(pen='r', name = "x acc")
-        self.curve_yaccel = self.pw_accel.plot(pen='g',name = "y acc")
-        self.curve_zaccel = self.pw_accel.plot(pen='b',name ="z acc")
+        self.curve_xaccel = self.pw_accel.plot(pen={'color':'r', 'width':2}, name = "x acc")
+        self.curve_yaccel = self.pw_accel.plot(pen={'color':'g', 'width':2},name = "y acc")
+        self.curve_zaccel = self.pw_accel.plot(pen={'color':'skyblue', 'width':2},name ="z acc")
 
         self.x_ran = 500
         self.time = zeros(self.x_ran)
@@ -161,6 +165,16 @@ class GraphViewer_Thread(QThread):
             self.curve_xaccel.setData(x=self.time, y=self.xaccel)
             self.curve_yaccel.setData(x=self.time, y=self.yaccel)
             self.curve_zaccel.setData(x=self.time, y=self.zaccel)
+
+    def reset_range(self):
+        if self.time is not None:
+            self.pw_angle.setYRange(-180,180)
+            self.pw_angleSpeed.setYRange(-1000,1000)
+            self.pw_accel.setYRange(-6,6)
+
+            self.pw_angle.enableAutoRange(axis='x')
+            self.pw_angleSpeed.enableAutoRange(axis='x')
+            self.pw_accel.enableAutoRange(axis='x')
 
     def graph_clear(self):
 

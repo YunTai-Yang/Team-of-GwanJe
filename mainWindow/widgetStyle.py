@@ -37,6 +37,7 @@ ax_checker_geomoetry = np.array([a*0.02,  b*0.71,  100,  30]).astype(int)
 ay_checker_geomoetry = np.array([a*0.02,  b*0.75,  100,  30]).astype(int)
 az_checker_geomoetry = np.array([a*0.02,  b*0.79,  100,  30]).astype(int)
 
+range_button_geometry = np.array([a*0.02,   b*0.22,  a*0.04,  0.02*a]).astype(int)
 # 
 map_geometry = np.array([a*0.41,  b*0.04,  a*0.3,  a*0.3]).astype(int)
 

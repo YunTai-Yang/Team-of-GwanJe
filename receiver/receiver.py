@@ -22,7 +22,8 @@ class Receiver(Thread):
                                     timeout=0.1)
 
     def _decode_data(self, data_bytes):
-        decode_data = unpack('>18f', data_bytes)
+        decode_data = unpack('<18f', data_bytes)
+        print(decode_data)
 
         if sum(decode_data[4:-1])-decode_data[-1]<1:
             all_data = around(decode_data,4)
