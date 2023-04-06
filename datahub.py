@@ -33,7 +33,6 @@ class Datahub:
         self.longitudes = empty(0)
         self.altitude = empty(0)
         self.speed = empty(0)
-        self.n=0
         
         #map view trigger
         self.trigger_python = 0

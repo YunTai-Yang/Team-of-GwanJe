@@ -20,9 +20,9 @@ pw_angle_geometry = np.array([a*0.07,  b*0.05,  a*0.3,  b*0.28]).astype(int)
 pw_angleSpeed_geometry = np.array([a*0.07,  b*0.37,  a*0.3,  b*0.28]).astype(int)
 pw_accel_geometry = np.array([a*0.07,  b*0.69,  a*0.3,  b*0.28]).astype(int)
 
-angle_title_geometry = np.array([a*0.15, b*0.025, 200, 30]).astype(int)
-angleSpeed_title_geometry = np.array([a*0.15, b*0.345, 200, 30]).astype(int)
-accel_title_geometry = np.array([a*0.15, b*0.665, 200, 30]).astype(int)
+angle_title_geometry = np.array([a*0.15, b*0.025, a*0.2, 30]).astype(int)
+angleSpeed_title_geometry = np.array([a*0.15, b*0.345, a*0.2, 30]).astype(int)
+accel_title_geometry = np.array([a*0.15, b*0.665, a*0.2, 30]).astype(int)
 
 # checker geometry
 roll_checker_geomoetry = np.array([a*0.02,  b*0.07,  100,  50]).astype(int)
@@ -37,6 +37,7 @@ ax_checker_geomoetry = np.array([a*0.02,  b*0.71,  100,  30]).astype(int)
 ay_checker_geomoetry = np.array([a*0.02,  b*0.75,  100,  30]).astype(int)
 az_checker_geomoetry = np.array([a*0.02,  b*0.79,  100,  30]).astype(int)
 
+range_button_geometry = np.array([a*0.02,   b*0.22,  a*0.04,  0.02*a]).astype(int)
 # 
 map_geometry = np.array([a*0.41,  b*0.04,  a*0.3,  a*0.3]).astype(int)
 
@@ -49,21 +50,21 @@ baudrate_text_geometry = np.array([a*0.41,  a*0.28+b*0.132, a*0.04, a*0.01125]).
 baudrate_edit_geometry = np.array([a*0.46,  a*0.28+b*0.132,  a*0.06, a*0.01125]).astype(int)
 
 # start/stop button geometry
-start_geometry = np.array([a*0.41,  0.132*b+0.3*a,  0.12*a,  0.12*a ]).astype(int)
-stop_geometry = np.array([a*0.56, a*0.265+b*0.132, 0.15*a, 0.07*a]).astype(int)
-reset_geometry = np.array([a*0.56, a*0.35+b*0.132, 0.15*a, 0.07*a]).astype(int)
-status_geometry = np.array([a*0.41,  0.14*b+0.42*a, 0.3*a, 35]).astype(int)
+start_geometry = np.array([a*0.41,  0.132*b+0.3*a,  0.12*a,  0.768*b-0.3*a ]).astype(int)
+stop_geometry = np.array([a*0.56, a*0.265+b*0.132, 0.15*a, 0.384*b-0.135*a]).astype(int)
+reset_geometry = np.array([a*0.56, a*0.135+b*0.516, 0.15*a, 0.384*b-0.135*a]).astype(int)
+status_geometry = np.array([a*0.41,  0.91*b, 0.3*a, 0.05*b]).astype(int)
 
+0.97*b
 # 
-model_geometry = np.array([a*0.75,  b*0.04,  a*0.2, a*0.3]).astype(int)
+model_geometry = np.array([a*0.74,  b*0.04,  a*0.24, a*0.3]).astype(int)
 speed_label_geometry = np.array([a*0.8, 0.04*b+0.26*a, 250,30]).astype(int)
 
 # 
-cmd_geometry = np.array([a*0.74, 0.24*a+0.132*b,  a*0.22,  0.17*a]).astype(int)
+cmd_geometry = np.array([a*0.74, 0.24*a+0.132*b,  a*0.25,  0.17*a]).astype(int)
 
 # 
-irri_logo_geometry = np.array([a*0.83, 0.89*b,  a*0.15,  0.1*b]).astype(int)
-
+irri_logo_geometry = np.array([a*0.83, 0.89*b,  a*0.16,  0.1*b]).astype(int)
 
 # all fonts
 font_portText = QFont()
@@ -97,24 +98,25 @@ font_reset_text = QFont()
 font_reset_text.setPointSize(20)
 
 font_status_text = QFont()
-font_status_text.setPointSize(11)
+font_status_text.setPointSize(12)
 
 font_speed_text = QFont()
 font_speed_text.setPointSize(16)
 
 
 
-start_status = 'Program start. you can push the stop button'
-stop_status = 'Program stop. you can push the start button'
+start_status = 'Program start.'
+stop_status = 'Program stop.'
+wait_status = 'Wait for start'
 
 guide = """
-1. Enter your serial port in the text box\n
-2. Pust start button\n
-3. Enter your save file name for save datas and \n     push ok button\n
-3. You can push a check box left the graph to \n     hide a curve\n
-4. You can drag a map or scroll the map to move view\n
-5. All reveiced data is saved in real-time and saved in same folder\n
-6. Push stop button
+1. 시리얼 포트 입력\n
+2. 시작 버튼 클릭\n
+3. 데이터 저장할 파일 이름 입력 \n
+4. 체크박스 클릭 --> 그래프 숨기기 / 보이기 \n
+4. 정지 버튼 클릭 --> 통신 종료(재시작 하면 같은 파일에 저장)\n
+5. 리셋 버틍 클릭 --> 통신 종료 및 파일 저장 종료\n
+6. 메뉴바(ctrl+l) -> 분석 툴 -> 파일 이름 확인 후 분석
 """
 
 ### Sub window ###
@@ -123,6 +125,7 @@ csv_name_geometry = np.array([a*0.8, 0.8*b,  a*0.1, a*0.02]).astype(int)
 analysis_button_geometry = np.array([a*0.8, 0.85*b,  a*0.1, a*0.02]).astype(int)
 analysis_angular_button_geometry = np.array([a*0.73, 0.7*b, a*0.10, a*0.02]).astype(int)
 analysis_alnsp_button_geometry = np.array([a*0.87, 0.7*b, a*0.10, a*0.02]).astype(int)
+set_range_geometry = np.array([a*0.8, 0.55*b,  a*0.1, a*0.02]).astype(int)
 
 gr_angle_geometry = np.array([a*0.1,  b*0.04,  a*0.6,  b*0.28]).astype(int)
 gr_angleSpeed_geometry = np.array([a*0.1,  b*0.36,  a*0.6,  b*0.28]).astype(int)
@@ -132,9 +135,11 @@ max_altitude_label_geometry = np.array([a*0.75,  b*0.15,  300, 50]).astype(int)
 max_speed_label_geometry = np.array([a*0.75,  b*0.15+50,  300, 50]).astype(int)
 max_accel_label_geometry = np.array([a*0.75,  b*0.15+100,  300, 50]).astype(int)
 
-max_altitude_geometry = np.array([a*0.75+200,  b*0.15,  300, 50]).astype(int)
-max_speed_geometry = np.array([a*0.75+200,  b*0.15+50,  300, 50]).astype(int)
-max_accel_geometry = np.array([a*0.75+200,  b*0.15+100,  300, 50]).astype(int)
+max_altitude_geometry = np.array([a*0.75+300,  b*0.15,  300, 50]).astype(int)
+max_speed_geometry = np.array([a*0.75+300,  b*0.15+50,  300, 50]).astype(int)
+max_accel_geometry = np.array([a*0.75+300,  b*0.15+100,  300, 50]).astype(int)
+
+
 
 font_max_alti_label_text = QFont()
 font_max_alti_label_text.setPointSize(15)

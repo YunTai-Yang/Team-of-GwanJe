@@ -8,12 +8,9 @@ from time import sleep
 class Receiver(Thread):
     def __init__(self, datahub):
         super().__init__()
-        self.count = 0
         self.datahub = datahub
         self.first_time = True
         self.ser = None
-
-        self.n = 0
 
 
     def setSerial(self,myport,mybaudrate):
@@ -25,7 +22,8 @@ class Receiver(Thread):
                                     timeout=0.1)
 
     def _decode_data(self, data_bytes):
-        decode_data = unpack('>18f', data_bytes)
+        decode_data = unpack('<18f', data_bytes)
+        print(decode_data)
 
         if sum(decode_data[4:-1])-decode_data[-1]<1:
             all_data = around(decode_data,4)
@@ -37,27 +35,28 @@ class Receiver(Thread):
         while True:
             try:
                 if self.datahub.iscommunication_start:
-                        if self.first_time:
-                            self.setSerial(self.datahub.mySerialPort,self.datahub.myBaudrate)
-                            self.first_time=False
+                    if self.first_time:
+                        self.setSerial(self.datahub.mySerialPort,self.datahub.myBaudrate)
+                        self.first_time=False
 
-                        if not self.ser.is_open:
-                            self.ser.open()
+                    if not self.ser.is_open:
+                        self.ser.open()
 
-                        self.datahub.serial_port_error=0
-                        header1 = self.ser.read(1)
+                    self.datahub.serial_port_error=0
+                    header1 = self.ser.read(1)
 
-                        if header1 == b'A':
-                            header2 = self.ser.read(1)
+                    if header1 == b'A':
+                        header2 = self.ser.read(1)
 
-                            if header2 == b'B':
-                                bytes_data = self.ser.read(72)
-                                self._decode_data(bytes_data)
+                        if header2 == b'B':
+                            bytes_data = self.ser.read(72)
+                            self._decode_data(bytes_data)
+                    sleep(0.001)
 
                 else:
                     if self.ser != None and self.ser.is_open :
                         self.ser.close()
-                    sleep(0.08)
+                    sleep(0.05)
             except:
                 self.datahub.serial_port_error=1
 
