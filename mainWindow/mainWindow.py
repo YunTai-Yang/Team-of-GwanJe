@@ -649,7 +649,7 @@ class MainWindow(PageWindow):
     def initMenubar(self):
         self.statusBar()
 
-        change_Action = QAction('Analysis', self)
+        change_Action = QAction('Analysis', self.container)
         change_Action.setShortcut('Ctrl+L')
         change_Action.triggered.connect(self.gosub)
 
@@ -676,33 +676,33 @@ class MainWindow(PageWindow):
         """)
 
     def initGraph(self):
-        self.roll_hide_checkbox = QCheckBox("roll", self)
+        self.roll_hide_checkbox = QCheckBox("roll", self.container)
         self.roll_hide_checkbox.setStyleSheet("color: white;")
 
-        self.pitch_hide_checkbox = QCheckBox("pitch", self)
+        self.pitch_hide_checkbox = QCheckBox("pitch", self.container)
         self.pitch_hide_checkbox.setStyleSheet("color: white;")
 
-        self.yaw_hide_checkbox = QCheckBox("yaw", self)
+        self.yaw_hide_checkbox = QCheckBox("yaw", self.container)
         self.yaw_hide_checkbox.setStyleSheet("color: white;")
 
 
 
-        self.rollspeed_hide_checkbox = QCheckBox("w_x",self)
+        self.rollspeed_hide_checkbox = QCheckBox("w_x",self.container)
         self.rollspeed_hide_checkbox.setStyleSheet("color: white;")
         
-        self.pitchspeed_hide_checkbox = QCheckBox("w_y",self)
+        self.pitchspeed_hide_checkbox = QCheckBox("w_y",self.container)
         self.pitchspeed_hide_checkbox.setStyleSheet("color: white;")
         
-        self.yawspeed_hide_checkbox = QCheckBox("w_z",self)
+        self.yawspeed_hide_checkbox = QCheckBox("w_z",self.container)
         self.yawspeed_hide_checkbox.setStyleSheet("color: white;")
 
-        self.xacc_hide_checkbox = QCheckBox("a_x",self)
+        self.xacc_hide_checkbox = QCheckBox("a_x",self.container)
         self.xacc_hide_checkbox.setStyleSheet("color: white;")
         
-        self.yacc_hide_checkbox = QCheckBox("a_y",self)
+        self.yacc_hide_checkbox = QCheckBox("a_y",self.container)
         self.yacc_hide_checkbox.setStyleSheet("color: white;")
         
-        self.zacc_hide_checkbox = QCheckBox("a_z",self)
+        self.zacc_hide_checkbox = QCheckBox("a_z",self.container)
         self.zacc_hide_checkbox.setStyleSheet("color: white;")
 
         self.roll_hide_checkbox.setGeometry(*ws.roll_checker_geomoetry)
