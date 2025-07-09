@@ -5,9 +5,14 @@ from threading import Thread
 from time import sleep
 #from datahub import Datahub
 
+import numpy as np
+
+
+##'A' 'B' hours, mins, secs, tenmilis, rolls, pitchs, yaws, rollSpeeds, pitchSpeeds, yawSpeeds, Xaccels, Yaccels, Zaccels, latitudes, longitudes, altitude, speed, checksum
+
 class Receiver(Thread):
     def __init__(self, datahub):
-        super().__init__()
+        super().__init__( daemon=True )
         self.datahub = datahub
         self.first_time = True
         self.ser = None
@@ -31,28 +36,71 @@ class Receiver(Thread):
 
 
     def run(self):
+        
+        hdrf = 0
+        idxn = 0
+        
+        msgd = np.zeros( 74, dtype=np.uint8 )
+        
         while True:
             try:
                 if self.datahub.iscommunication_start:
                     if self.first_time:
-                        self.setSerial(self.datahub.mySerialPort,self.datahub.myBaudrate)
+                        self.setSerial( self.datahub.mySerialPort, self.datahub.myBaudrate )
                         self.first_time=False
 
                     if not self.ser.is_open:
                         self.ser.open()
+                        print( "opened" )
 
                     self.datahub.serial_port_error=0
-                    header1 = self.ser.read(1)
+                    byte = self.ser.read()
+                    
+                    if ( hdrf == 2 ):
+                        msgd[idxn] = np.frombuffer( byte, np.uint8 )
+                        
+                        idxn += 1
 
-                    if header1 == b'A':
-                        header2 = self.ser.read(1)
+                        if ( idxn == 74 ):
+                            data = np.frombuffer( msgd[2:], np.float32 )
+                            
+                            if ( np.sum( data[4:-1] ) == data[-1] ):
+                                # print( 'good' )
+                                
+                                self.datahub.update(data)
+                                
+                            hdrf = 0
+                            idxn = 0
+                         
+                    elif ( hdrf == 0 ):   
+                        if ( byte == b"A" ):
+                            msgd[idxn] = np.frombuffer( byte, np.uint8 )
+    
+                            hdrf += 1
+                            idxn += 1
+                            
+                        else:
+                            hdrf = 0
+                            idxn = 0
+                            
+                    elif ( hdrf == 1 ):
+                        if ( byte == b"B" ):
+                            msgd[idxn] = np.frombuffer( byte, np.uint8 )
+    
+                            hdrf += 1
+                            idxn += 1
+                            
+                        else:
+                            hdrf = 0
+                            idxn = 0
 
-                        if header2 == b'B':
-                            bytes_data = self.ser.read(72)
-                            self._decode_data(bytes_data)
-                    sleep(0.001)
+                    else:
+                        hdrf = 0
+                        idxn = 0
 
                 else:
+                    self.datahub.communication_start()
+
                     if self.ser != None and self.ser.is_open :
                         self.ser.close()
                     sleep(0.05)

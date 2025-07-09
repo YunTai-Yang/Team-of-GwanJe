@@ -1,6 +1,7 @@
 from csv import writer
 from time import sleep
 from numpy import vstack
+import os
 
 class DataSaver:
     def __init__(self, datahub):
@@ -9,6 +10,11 @@ class DataSaver:
         self.file = None
         self.writer = None
         self.saverows = 0
+        self.log_dir = 'log'  # log 폴더를 지정합니다.
+
+        # log 폴더가 존재하지 않으면 생성합니다.
+        if not os.path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
                 
     def save_data(self):
         while self.datahub.isdatasaver_start:
@@ -44,17 +50,20 @@ class DataSaver:
         while True:
             if self.datahub.isdatasaver_start:
                 if self.file is None or self.file.closed:
-                    self.file = open(self.datahub.file_Name, 'w', newline='')
+                    # log 폴더 안에 파일을 생성합니다.
+                    file_path = os.path.join(self.log_dir, self.datahub.file_Name)
+                    self.file = open(file_path, 'w', newline='')
                     self.writer = writer(self.file)
-                    self.writer.writerow(["Hours","Minute","Second","10milis","Roll","Pitch","Yaw","RollSpeed","PitchSpeed","YawSpeed","Xaccel","Yaccel","Zaccel","longitude","latitude","altitude","Speed"])
+                    self.writer.writerow(["Hours", "Minute", "Second", "10milis", "Roll", "Pitch", "Yaw", 
+                                          "RollSpeed", "PitchSpeed", "YawSpeed", "Xaccel", "Yaccel", 
+                                          "Zaccel", "longitude", "latitude", "altitude", "Speed"])
                     self.save_data()
-                    
                     self.stop()
                 else:
                     pass
             sleep(0.1)
             
     def stop(self):
-        if self.file != None and not self.file.closed:
+        if self.file is not None and not self.file.closed:
             self.file.close()
         self.saverows = 0

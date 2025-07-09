@@ -9,7 +9,7 @@ class Datahub:
         self.iscommunication_start = 0
         self.isdatasaver_start = 0
         self.file_Name = 'Your File Name.csv'
-        self.mySerialPort = 'COM8'
+        self.mySerialPort = 'COM6'
         self.myBaudrate = 115200
         self.serial_port_error=-1
         """
@@ -74,7 +74,6 @@ class Datahub:
         self.longitudes = append(self.longitudes, datas[14])
         self.altitude = append(self.altitude, datas[15])
         self.speed = append(self.speed, datas[16])
-
 
 
     def clear(self):

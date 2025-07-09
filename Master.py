@@ -36,7 +36,7 @@ class Master:
 
         self.datasaver = Thread_DataSaver(self.datahub)
 
-        self.receiver = Thread_Receiver(self.datahub)
+        self.receiver = Receiver(self.datahub)
 
 
         self.datasaver.daemon = True
@@ -45,6 +45,7 @@ class Master:
     def run(self):
 
         self.receiver.start()
+        
         self.datasaver.start()
 
         self.mainWindow.start() 
@@ -55,3 +56,5 @@ if __name__ == "__main__":
     master = Master()
 
     master.run()
+    
+    input()
